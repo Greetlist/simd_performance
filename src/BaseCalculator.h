@@ -28,6 +28,7 @@ public:
       final_sum += result[i];
     }
     std::cout << "final sum: " << final_sum << std::endl;
+    delete []result;
   }
   virtual void Mul(const std::vector<DataType>& a, const std::vector<DataType>& b) {
   }

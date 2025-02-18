@@ -1,6 +1,7 @@
 #include <iostream>
 #include "BaseCalculator.h"
 #include "SSECalculator.h"
+#include "AVXCalculator.h"
 
 constexpr int arr_size = 100000000;
 
@@ -11,9 +12,11 @@ int main(int argc, char** argv) {
     a[i] = 1;
     b[i] = 1;
   }
-  //BaseCalculator<int> bc;
-  //bc.Sum(a, b, arr_size);
+  BaseCalculator<int> bc;
+  bc.Sum(a, b, arr_size);
   SSECalculator<int> ssec;
   ssec.Sum(a, b, arr_size);
+  AVXCalculator<int> avxc;
+  avxc.Sum(a, b, arr_size);
   return 0;
 }

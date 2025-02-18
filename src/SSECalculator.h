@@ -16,16 +16,15 @@ public:
     auto start = std::chrono::system_clock::now();
     DataType* result = new(std::align_val_t{16}) DataType[size];
     memset(result, 0, sizeof(DataType) * size);
-    int round = size / HandleDataSize();
-    for (int i = 0; i < round; ++i) {
+    for (int i = 0; i < size; i += 4) {
       if constexpr (std::is_same_v<DataType, float>) {
         __m128 ra = _mm_loadu_ps(&a[i]);
         __m128 rb = _mm_loadu_ps(&b[i]);
         _mm_storeu_ps(&result[i], _mm_add_ps(ra, rb));
       } else if constexpr (std::is_same_v<DataType, int>) {
-        __m128i ra = _mm_loadu_si64(&a[i]);
-        __m128i rb = _mm_loadu_si64(&b[i]);
-        _mm_storeu_si128(&result[i], _mm_add_epi64(ra, rb));
+        __m128i ra = _mm_loadu_si128(reinterpret_cast<const __m128i_u*>(&a[i]));
+        __m128i rb = _mm_loadu_si128(reinterpret_cast<const __m128i_u*>(&b[i]));
+        _mm_storeu_si128(reinterpret_cast<__m128i_u*>(&result[i]), _mm_add_epi64(ra, rb));
       }
     }
     auto end = std::chrono::system_clock::now();
@@ -39,15 +38,17 @@ public:
       final_sum += result[i];
     }
     std::cout << "final sum: " << final_sum << std::endl;
+    delete []result;
   }
   void Mul(const std::vector<DataType>& a, const std::vector<DataType>& b) override {
   }
 private:
   static constexpr int align_bytes = 16;
-  static constexpr int sse_data_bytes = 128;
+  static constexpr int sse_data_bytes = 128 / 8;
   std::string GetClassName() override {return std::string{"SSECalculator"};}
-  int HandleDataSize() {
-    return static_cast<int>(sse_data_bytes / sizeof(DataType));
+  constexpr int HandleDataSize() {
+    return 4;
+    //return static_cast<int>(sse_data_bytes / sizeof(DataType));
   }
 };
 
