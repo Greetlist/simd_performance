@@ -6,17 +6,17 @@
 constexpr int arr_size = 100000000;
 
 int main(int argc, char** argv) {
-  int* a = new(std::align_val_t{16}) int[arr_size];
-  int* b = new(std::align_val_t{16}) int[arr_size];
+  double* a = new(std::align_val_t{16}) double[arr_size];
+  double* b = new(std::align_val_t{16}) double[arr_size];
   for (int i = 0; i < arr_size; ++i) {
-    a[i] = 1;
-    b[i] = 1;
+    a[i] = 10;
+    b[i] = 20;
   }
-  BaseCalculator<int> bc;
-  bc.Sum(a, b, arr_size);
-  SSECalculator<int> ssec;
-  ssec.Sum(a, b, arr_size);
-  AVXCalculator<int> avxc;
-  avxc.Sum(a, b, arr_size);
+  BaseCalculator<double> bc;
+  bc.Mul(a, b, arr_size);
+  SSECalculator<double> ssec;
+  ssec.Mul(a, b, arr_size);
+  AVXCalculator<double> avxc;
+  avxc.Mul(a, b, arr_size);
   return 0;
 }
