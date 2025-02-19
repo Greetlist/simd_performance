@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string.h>
 
+#include "defined_types.h"
+
 template <class DataType>
 class BaseCalculator {
 public:
@@ -46,6 +48,40 @@ public:
       << " microseconds."
       << std::endl;
     this->check(result, size);
+  }
+
+  virtual void MatrixMul(const Matrix<DataType>& a, const Matrix<DataType>& b) {
+    int a_row = a.GetRow();
+    int a_col = a.GetCol();
+    int b_col = b.GetCol();
+    DataType** a_data = a.GetData();
+    DataType** b_data = b.GetData();
+    Matrix<DataType> result(a_row, b_col, 0.00);
+    DataType** result_data_ptr = result.GetData();
+    for (int i = 0; i < a_row; ++i) {
+      for (int j = 0; j < b_col; ++j) {
+        int cur_result = 0;
+        for (int k = 0; k < a_col; ++k) {
+          cur_result += a_data[i][k] * b_data[k][j];
+        }
+        result_data_ptr[i][j] = cur_result;
+      }
+    }
+    result.Print();
+  }
+
+  Matrix<DataType> Transpose(const Matrix<DataType>& m) {
+    int row = m.GetRow();
+    int col = m.GetCol();
+    Matrix<DataType> result(col, row, 0.00);
+    DataType** m_data = m.GetData();
+    DataType** r_data = result.GetData();
+    for (int j = 0; j < col; ++j) {
+      for (int i = 0; i < row; ++i) {
+        r_data[j][i] = m_data[i][j];
+      }
+    }
+    return result;
   }
 
   void check(DataType* vec, int size) {

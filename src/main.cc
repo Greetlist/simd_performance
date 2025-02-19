@@ -12,11 +12,16 @@ int main(int argc, char** argv) {
     a[i] = 10;
     b[i] = 20;
   }
-  BaseCalculator<double> bc;
-  bc.Mul(a, b, arr_size);
+  Matrix<double> ma(2, 4, 1.00);
+  Matrix<double> mb(4, 2, 1.00);
+
+  //BaseCalculator<double> bc;
+  //bc.MatrixMul(ma, mb);
+  //bc.Mul(a, b, arr_size);
   SSECalculator<double> ssec;
-  ssec.Mul(a, b, arr_size);
-  AVXCalculator<double> avxc;
-  avxc.Mul(a, b, arr_size);
+  //ssec.Mul(a, b, arr_size);
+  ssec.MatrixMul(ma, mb);
+  //AVXCalculator<double> avxc;
+  //avxc.Mul(a, b, arr_size);
   return 0;
 }

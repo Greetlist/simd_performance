@@ -68,6 +68,35 @@ public:
       << std::endl;
     this->check(result, size);
   }
+
+  void MatrixMul(const Matrix<DataType>& a, const Matrix<DataType>& b) override {
+    Matrix<DataType> transpose = this->Transpose(b);
+    transpose.Print();
+    int a_row = a.GetRow();
+    int a_col = a.GetCol();
+    int t_col = transpose.GetCol();
+    DataType** a_data = a.GetData();
+    DataType** t_data = transpose.GetData();
+    Matrix<DataType> result(a_row, b_col, 0.00);
+    DataType** result_data_ptr = result.GetData();
+    if constexpr (std::is_same_v<float>) {
+    } else if constexpr (std::is_same_v<double>) {
+    }
+
+    for (int i = 0; i < a_row; ++i) {
+      for (int j = 0; j < t_row; ++j) {
+        __mm128 res = 0;
+        for (int k = 0; k < a_col; k += 4) {
+          __mm128 cur_res = _mm_mul_ps(&a_data[i][j], &t_data[i][j]);
+          res = _mm_add_ps(res, cur_res);
+        }
+        _mm_storeu_ps(&result_dat_ptr[i][], res);
+      }
+    }
+
+    //result.Print();
+  }
+
 private:
   static constexpr int align_bytes = 16;
   static constexpr int sse_data_bytes = 128 / 8;
