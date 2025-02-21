@@ -6,22 +6,25 @@
 constexpr int arr_size = 100000000;
 
 int main(int argc, char** argv) {
-  double* a = new(std::align_val_t{16}) double[arr_size];
-  double* b = new(std::align_val_t{16}) double[arr_size];
+  float* a = new(std::align_val_t{16}) float[arr_size];
+  float* b = new(std::align_val_t{16}) float[arr_size];
   for (int i = 0; i < arr_size; ++i) {
     a[i] = 10;
     b[i] = 20;
   }
-  Matrix<double> ma(2, 4, 1.00);
-  Matrix<double> mb(4, 2, 1.00);
+  Matrix<float> ma(30, 10000, 1.00);
+  Matrix<float> mb(10000, 10, 1.00);
 
-  //BaseCalculator<double> bc;
-  //bc.MatrixMul(ma, mb);
+  BaseCalculator<float> bc;
+  bc.MatrixMul(ma, mb);
   //bc.Mul(a, b, arr_size);
-  SSECalculator<double> ssec;
-  //ssec.Mul(a, b, arr_size);
+
+  SSECalculator<float> ssec;
   ssec.MatrixMul(ma, mb);
-  //AVXCalculator<double> avxc;
+  //ssec.Mul(a, b, arr_size);
+
+  AVXCalculator<float> avxc;
+  avxc.MatrixMul(ma, mb);
   //avxc.Mul(a, b, arr_size);
   return 0;
 }

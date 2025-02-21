@@ -51,6 +51,7 @@ public:
   }
 
   virtual void MatrixMul(const Matrix<DataType>& a, const Matrix<DataType>& b) {
+    auto start = std::chrono::system_clock::now();
     int a_row = a.GetRow();
     int a_col = a.GetCol();
     int b_col = b.GetCol();
@@ -67,7 +68,13 @@ public:
         result_data_ptr[i][j] = cur_result;
       }
     }
-    result.Print();
+    auto end = std::chrono::system_clock::now();
+    std::cout 
+      << GetClassName() << " Matrix Multiply cost: "
+      << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()
+      << " microseconds."
+      << std::endl;
+    //result.Print();
   }
 
   Matrix<DataType> Transpose(const Matrix<DataType>& m) {

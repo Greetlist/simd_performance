@@ -67,6 +67,67 @@ public:
       << std::endl;
     this->check(result, size);
   }
+
+  void MatrixMul(const Matrix<DataType>& a, const Matrix<DataType>& b) override {
+    auto start = std::chrono::system_clock::now();
+    Matrix<DataType> transpose = this->Transpose(b);
+    int a_row = a.GetRow();
+    int a_col = a.GetCol();
+    int t_row = transpose.GetRow();
+    DataType** a_data = a.GetData();
+    DataType** t_data = transpose.GetData();
+    Matrix<DataType> result(a_row, t_row, 0.00);
+    DataType** result_data_ptr = result.GetData();
+    if constexpr (std::is_same_v<DataType, float>) {
+      for (int i = 0; i < a_row; ++i) {
+        for (int j = 0; j < t_row; ++j) {
+          __m256 res = _mm256_set1_ps(0);
+          int k = 0;
+          for (; k < a_col-8; k += 8) {
+            __m256 cur_res = _mm256_mul_ps(_mm256_loadu_ps(&a_data[i][k]), _mm256_loadu_ps(&t_data[j][k]));
+            res = _mm256_add_ps(res, cur_res);
+          }
+
+          DataType* res_ptr = reinterpret_cast<DataType*>(&res);
+          for (int n = 0; n < 8; ++n) {
+            result_data_ptr[i][j] += res_ptr[n];
+          }
+
+          for (; k < a_col; ++k) {
+            result_data_ptr[i][j] += a_data[i][k] * t_data[j][k];
+          }
+        }
+      }
+    } else if constexpr (std::is_same_v<DataType, double>) {
+      for (int i = 0; i < a_row; ++i) {
+        for (int j = 0; j < t_row; ++j) {
+          __m256d res = _mm256_set1_pd(0);
+          int k = 0;
+          for (; k < a_col-4; k += 4) {
+            __m256d cur_res = _mm256_mul_pd(_mm256_loadu_pd(&a_data[i][k]), _mm256_loadu_pd(&t_data[j][k]));
+            res = _mm256_add_pd(res, cur_res);
+          }
+
+          DataType* res_ptr = reinterpret_cast<DataType*>(&res);
+          for (int n = 0; n < 4; ++n) {
+            result_data_ptr[i][j] += res_ptr[n];
+          }
+
+          for (; k < a_col; ++k) {
+            result_data_ptr[i][j] += a_data[i][k] * t_data[j][k];
+          }
+        }
+      }
+    }
+    auto end = std::chrono::system_clock::now();
+    std::cout 
+      << GetClassName() << " Matrix Multiply cost: "
+      << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()
+      << " microseconds."
+      << std::endl;
+    //result.Print();
+  }
+
 private:
   static constexpr int align_bytes = 16;
   static constexpr int sse_data_bytes = 128 / 8;
