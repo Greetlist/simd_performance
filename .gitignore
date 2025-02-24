@@ -1,3 +1,5 @@
 build/
 .xmake/
 a.out
+*.swp
+

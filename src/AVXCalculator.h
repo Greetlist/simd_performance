@@ -2,7 +2,7 @@
 #define _AVXCALCULATOR_H
 
 #include "BaseCalculator.h"
-#include <avxintrin.h>
+#include <immintrin.h>
 #include <string.h>
 #include <type_traits>
 

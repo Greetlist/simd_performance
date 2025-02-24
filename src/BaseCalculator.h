@@ -74,7 +74,7 @@ public:
       << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()
       << " microseconds."
       << std::endl;
-    //result.Print();
+    result.Print();
   }
 
   Matrix<DataType> Transpose(const Matrix<DataType>& m) {
