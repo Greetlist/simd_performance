@@ -11,4 +11,10 @@ void init_matrix(py::module& m) {
     .def("GetRow", &Matrix<float>::GetRow)
     .def("GetCol", &Matrix<float>::GetCol)
     .def("Print", &Matrix<float>::Print);
+
+  py::class_<Matrix<double>>(m, "MatrixDouble")
+    .def(py::init<int, int, double>())
+    .def("GetRow", &Matrix<double>::GetRow)
+    .def("GetCol", &Matrix<double>::GetCol)
+    .def("Print", &Matrix<double>::Print);
 }
