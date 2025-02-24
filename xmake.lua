@@ -1,6 +1,7 @@
 add_rules("mode.debug", "mode.release")
 
 add_requires("pybind11")
+set_optimize("faster")
 
 target("simd_performance")
     set_kind("binary")

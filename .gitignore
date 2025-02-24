@@ -2,4 +2,4 @@ build/
 .xmake/
 a.out
 *.swp
-
+*.data

@@ -39,7 +39,7 @@ def test_mul(row, col):
     np_m2 = np.full((col, row), 1.00, dtype='float32')
 
     start = time.time()
-    print(np.dot(np_m1, np_m2))
+    np.dot(np_m1, np_m2)
     end = time.time()
     print((end - start) * 1000 * 1000)
 
