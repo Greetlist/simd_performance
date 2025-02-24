@@ -29,17 +29,17 @@ def test_mul(row, col):
             cls_instance = cls()
             if t == "Float":
                 m1 = libcalculator.MatrixFloat(row, col, 1.00)
-                m2 = libcalculator.MatrixFloat(row, col, 1.00)
+                m2 = libcalculator.MatrixFloat(col, row, 1.00)
             else:
                 m1 = libcalculator.MatrixDouble(row, col, 1.00)
-                m2 = libcalculator.MatrixDouble(row, col, 1.00)
+                m2 = libcalculator.MatrixDouble(col, row, 1.00)
             cls_instance.MatrixMul(m1, m2)
 
     np_m1 = np.full((row, col), 1.00, dtype='float32')
     np_m2 = np.full((col, row), 1.00, dtype='float32')
 
     start = time.time()
-    np.dot(np_m1, np_m2)
+    print(np.dot(np_m1, np_m2))
     end = time.time()
     print((end - start) * 1000 * 1000)
 
